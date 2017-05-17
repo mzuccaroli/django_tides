@@ -1,7 +1,7 @@
-from .models import Game, Card, Draft, Seed
+from .models import Game, Card, Draft, Seed, Hand, Invitation
 # from django.http import HttpResponse
 from rest_framework import viewsets
-from .serializers import GameSerializer, CardSerializer, DraftSerializer, SeedSerializer
+from .serializers import GameSerializer, CardSerializer, DraftSerializer, SeedSerializer, HandSerializer, InvitationSerializer
 
 
 class GameViewSet(viewsets.ModelViewSet):
@@ -23,3 +23,12 @@ class DraftViewSet(viewsets.ModelViewSet):
     queryset = Draft.objects.all()
     serializer_class = DraftSerializer
 
+
+class HandViewSet(viewsets.ModelViewSet):
+    queryset = Hand.objects.all()
+    serializer_class = HandSerializer
+
+
+class InvitationViewSet(viewsets.ModelViewSet):
+    queryset = Invitation.objects.all()
+    serializer_class = InvitationSerializer

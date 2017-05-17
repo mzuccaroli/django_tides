@@ -1,4 +1,4 @@
-from .models import Game, Card, Draft, Seed
+from .models import Game, Card, Draft, Seed, Hand, Invitation
 from rest_framework import serializers
 
 
@@ -32,3 +32,15 @@ class DraftSerializer(serializers.ModelSerializer):
     class Meta:
         model = Draft
         fields = ('game_id', 'card_id', 'draft_order')
+
+
+class HandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hand
+        fields = ('game', 'player', 'card', 'status')
+
+
+class InvitationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Invitation
+        fields = ('from_user', 'to_user', 'message', 'timestamp')
