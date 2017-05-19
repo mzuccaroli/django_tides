@@ -1,6 +1,6 @@
-{% extends "base.html" %}
+{% extends "gamesrv/base.html" %}
 
-{#{% load crispy_forms_tags %}#}
+{% load crispy_forms_tags %}
 
 {% block title %}
 New Invitation
@@ -11,7 +11,7 @@ New Invitation
         <p>Please select the user you want to invite to play a game.</p>
         <form action="" method="post">
             {% csrf_token %}
-            {{ form }}
+            {{ form|crispy }}
             <button type="submit">Send the invitation</button>
         </form>
     </div>

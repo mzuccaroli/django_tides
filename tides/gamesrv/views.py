@@ -1,7 +1,7 @@
 from .models import Game, Card, Draft, Seed, Hand, Invitation
 # from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, reverse
 
 from django.views import generic
 from rest_framework import viewsets
@@ -12,7 +12,7 @@ from .forms import InvitationForm
 
 # @login_required
 class IndexView(generic.ListView):
-    template_name = 'tides/index.html'
+    template_name = 'gamesrv/index.html'
     context_object_name = 'games_list'
 
     def get_queryset(self):
@@ -29,12 +29,14 @@ def new_invitation(request):
             form.save()
             return redirect('allgames')
     else:
+        rev = reverse('tides_invite')
+        print ("-------------------------------------------------------------")
         form = InvitationForm()
-    return render(request, "tides/new_invitation.html", {'form': form})
+    return render(request, "gamesrv/new_invitation.html", {'form': form})
 
 
 class AllGamesList(generic.ListView):
-    template_name = 'tides/game_list.html'
+    template_name = 'gamesrv/game_list.html'
     model = Game
 
 

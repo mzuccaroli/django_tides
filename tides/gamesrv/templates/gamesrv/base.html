@@ -10,7 +10,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>{% block title %}Boardgames Demo application{% endblock title %}</title>
+    <title>{% block title %}Cardgame Demo application{% endblock title %}</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
@@ -22,20 +22,16 @@
 
 </head>
 <body>
-<!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
 <div class="navbar navbar-default navbar-static-top">
     <div class="container">
 
         <ul class="nav navbar-nav">
-            <li><a class="navbar-brand" href="#">Home</a></li>
-            <li><a href="#">New Game</a></li>
-
+            <li><a href="{% url 'allgames' %}">Home</a></li>
+            <li><a href="{% url 'tides_invite' %}">New Game</a></li>
             {% if user.is_authenticated %}
-                <li><a href="#">Logout</a></li>
+                <li><a href="{% url 'tides_logout' %}">Logout</a></li>
             {% else %}
-                <li><a href="#">Login</a></li>
+                <li><a href="{% url 'tides_login' %}">Login</a></li>
             {% endif %}
         </ul>
 

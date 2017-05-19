@@ -2,8 +2,6 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from . import views
 
-app_name = 'games'
-
 router = routers.DefaultRouter()
 router.register(r'games', views.GameViewSet)
 router.register(r'cards', views.CardViewSet)
@@ -13,8 +11,7 @@ router.register(r'hands', views.HandViewSet)
 router.register(r'invitations', views.InvitationViewSet)
 
 urlpatterns = [
-    url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^all$', views.AllGamesList.as_view(), name='allgames'),
     url(r'^api/', include(router.urls)),
+    url(r'^$', views.AllGamesList.as_view(), name='allgames'),
     url(r'^invite$', views.new_invitation, name='tides_invite'),
 ]
