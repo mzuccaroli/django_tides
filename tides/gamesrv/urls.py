@@ -13,5 +13,8 @@ router.register(r'hands', views.HandViewSet)
 router.register(r'invitations', views.InvitationViewSet)
 
 urlpatterns = [
-    url(r'^api/', include(router.urls))
+    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^all$', views.AllGamesList.as_view(), name='allgames'),
+    url(r'^api/', include(router.urls)),
+    url(r'^invite$', views.new_invitation, name='tides_invite'),
 ]

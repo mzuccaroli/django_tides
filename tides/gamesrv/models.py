@@ -64,10 +64,10 @@ class Game(models.Model):
     objects = GamesManager()
 
     def get_opponent(self):
-        if self.current_player == self.first_player:
-            return self.second_player
+        if self.current_player == self.player_1:
+            return self.player_2
         else:
-            return self.first_player
+            return self.player_1
 
     def toggle_next_player(self):
         self.current_player == self.get_opponent()
