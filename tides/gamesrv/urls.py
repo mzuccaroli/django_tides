@@ -14,4 +14,6 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^$', views.AllGamesList.as_view(), name='allgames'),
     url(r'^invite$', views.new_invitation, name='tides_invite'),
+    url(r'^invitation/(?P<pk>\d+)/$', views.accept_invitation, name='tides_accept_invitation'),
+
 ]

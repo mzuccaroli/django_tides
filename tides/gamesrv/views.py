@@ -1,5 +1,6 @@
 from .models import Game, Card, Draft, Seed, Hand, Invitation
 # from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 
@@ -10,14 +11,13 @@ from .serializers import GameSerializer, CardSerializer, DraftSerializer, SeedSe
 from .forms import InvitationForm
 
 
-# @login_required
-class IndexView(generic.ListView):
-    template_name = 'gamesrv/index.html'
-    context_object_name = 'games_list'
-
-    def get_queryset(self):
-        # return Game.objects.filter(player_1=request.user).order_by('last_turn_date')[:5]
-        return Game.objects.all()
+# class IndexView(generic.ListView):
+#     template_name = 'gamesrv/index.html'
+#     context_object_name = 'games_list'
+#
+#     def get_queryset(self):
+#         # return Game.objects.filter(player_1=request.user).order_by('last_turn_date')[:5]
+#         return Game.objects.all()
 
 
 @login_required
@@ -29,15 +29,34 @@ def new_invitation(request):
             form.save()
             return redirect('allgames')
     else:
-        rev = reverse('tides_invite')
-        print ("-------------------------------------------------------------")
         form = InvitationForm()
     return render(request, "gamesrv/new_invitation.html", {'form': form})
+
+
+@login_required
+def accept_invitation(request, pk):
+    invitation = get_object_or_404(Invitation, pk=pk)
+    if not request.user == invitation.to_user:
+        raise PermissionDenied
+    if request.method == 'POST':
+        if "accept" in request.POST:
+            game = Game.objects.new_game(invitation)
+            game.save()
+            invitation.delete()
+            return redirect(game)
+        else:
+            invitation.delete()
+            return redirect('user_home')
+    else:
+        return render(request, "gamesrv/accept_invitation.html", {'invitation': invitation})
 
 
 class AllGamesList(generic.ListView):
     template_name = 'gamesrv/game_list.html'
     model = Game
+    # def get_queryset(self):
+    #     # return Game.objects.filter(player_1=request.user).order_by('last_turn_date')[:5]
+    #     return Game.objects.all()
 
 
 class GameViewSet(viewsets.ModelViewSet):
