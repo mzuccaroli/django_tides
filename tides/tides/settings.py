@@ -59,7 +59,7 @@ ROOT_URLCONF = 'tides.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "tides/templates/tides")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

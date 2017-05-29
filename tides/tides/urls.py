@@ -21,6 +21,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^gamesrv/', include('gamesrv.urls')),
     url(r'^invitations/', include('invitations.urls')),
-    url(r'^accounts/login/$', auth_views.login, {'template_name': 'gamesrv/login.html'}, name='tides_login'),
+    url(r'^accounts/login/$', auth_views.login, {'template_name': 'login.html'}, name='tides_login'),
     url(r'^accounts/logout/$', auth_views.logout, {'next_page': 'allgames'}, name='tides_logout'),
 ]

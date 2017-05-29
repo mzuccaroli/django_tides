@@ -12,4 +12,5 @@ router.register(r'hands', views.HandViewSet)
 urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^$', views.AllGamesList.as_view(), name='allgames'),
+    url(r'^(?P<pk>\d+)/$', views.game_detail, name='game_detail'),
 ]

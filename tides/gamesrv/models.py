@@ -32,17 +32,18 @@ class GamesManager(models.Manager):
 
     def new_game(self, invitation):
         game = Game(
-            first_player=invitation.to_user,
-            second_player=invitation.from_user,
+            player_1=invitation.to_user,
+            player_2=invitation.from_user,
             current_player=choice([invitation.to_user, invitation.from_user])
         )
+        game.save()
         cards = Card.objects.all()
         order = [i for i in range(Card.objects.count())]
         shuffle(order)
         for index, card in enumerate(cards):
             draft = Draft(
-                game=game.id,
-                card=card.id,
+                game=game,
+                card=card,
                 draft_order=order[index]
             )
             draft.save()
@@ -55,7 +56,7 @@ class Game(models.Model):
     current_player = models.ForeignKey(User, related_name="games_to_move", blank=True)
     start_date = models.DateTimeField(auto_now_add=True)
     last_turn_date = models.DateTimeField(auto_now=True)
-    finished = models.BooleanField()
+    finished = models.BooleanField(default=False)
     turn_number = models.IntegerField(default=1)
     deck = models.ManyToManyField(Card, through='Draft', related_name='deck')
     deck_index = models.IntegerField(default=0)
@@ -161,4 +162,3 @@ class Hand(models.Model):
 
     def discard_card(self):
         self.status = "D"
-

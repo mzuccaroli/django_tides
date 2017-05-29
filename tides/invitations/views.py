@@ -30,9 +30,8 @@ def accept_invitation(request, pk):
     if request.method == 'POST':
         if "accept" in request.POST:
             game = Game.objects.new_game(invitation)
-            game.save()
-            invitation.delete()
-            return redirect(game)
+            # invitation.delete()
+            return redirect('game_detail', pk=game.pk)
         else:
             invitation.delete()
             return redirect('user_home')

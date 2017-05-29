@@ -3,6 +3,8 @@ from .models import Game, Card, Draft, Seed, Hand
 from django.views import generic
 from rest_framework import viewsets
 from .serializers import GameSerializer, CardSerializer, DraftSerializer, SeedSerializer, HandSerializer
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 
 # class IndexView(generic.ListView):
 #     template_name = 'gamesrv/index.html'
@@ -19,6 +21,14 @@ class AllGamesList(generic.ListView):
     # def get_queryset(self):
     #     # return Game.objects.filter(player_1=request.user).order_by('last_turn_date')[:5]
     #     return Game.objects.all()
+
+
+@login_required
+def game_detail(request, pk):
+    game = get_object_or_404(Game, pk=pk)
+    # if game.is_users_move(request.user):
+    #     return redirect('game_do_move', pk=pk)
+    return render(request, "gamesrv/game_detail.html", {'game': game})
 
 
 class GameViewSet(viewsets.ModelViewSet):
