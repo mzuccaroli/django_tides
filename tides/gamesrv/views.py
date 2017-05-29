@@ -1,6 +1,5 @@
 from .models import Game, Card, Draft, Seed, Hand
 
-
 from django.views import generic
 from rest_framework import viewsets
 from .serializers import GameSerializer, CardSerializer, DraftSerializer, SeedSerializer, HandSerializer

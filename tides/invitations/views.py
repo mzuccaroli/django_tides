@@ -1,4 +1,5 @@
 from .models import Invitation
+from django.views import generic
 from gamesrv.models import Game
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import login_required
@@ -18,7 +19,7 @@ def new_invitation(request):
             return redirect('allgames')
     else:
         form = InvitationForm()
-    return render(request, "gamesrv/new_invitation.html", {'form': form})
+    return render(request, "invitations/new_invitation.html", {'form': form})
 
 
 @login_required
@@ -36,7 +37,15 @@ def accept_invitation(request, pk):
             invitation.delete()
             return redirect('user_home')
     else:
-        return render(request, "gamesrv/accept_invitation.html", {'invitation': invitation})
+        return render(request, "invitations/accept_invitation.html", {'invitation': invitation})
+
+
+class AllInvitationsList(generic.ListView):
+    template_name = 'invitations/invitation_list.html'
+    model = Invitation
+    # def get_queryset(self):
+    #     # return Game.objects.filter(player_1=request.user).order_by('last_turn_date')[:5]
+    #     return Game.objects.all()
 
 
 class InvitationViewSet(viewsets.ModelViewSet):

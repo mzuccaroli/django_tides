@@ -12,3 +12,6 @@ class Invitation(models.Model):
     message = models.CharField("Optional Message", max_length=300, blank=True,
                                help_text="Adding a friendly message is never a bad idea!")
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{0} to {1}".format(self.from_user, self.to_user)
