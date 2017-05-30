@@ -37,16 +37,7 @@ class GamesManager(models.Manager):
             current_player=choice([invitation.to_user, invitation.from_user])
         )
         game.save()
-        cards = Card.objects.all()
-        order = [i for i in range(Card.objects.count())]
-        shuffle(order)
-        for index, card in enumerate(cards):
-            draft = Draft(
-                game=game,
-                card=card,
-                draft_order=order[index]
-            )
-            draft.save()
+        game.prepare_game()
         return game
 
 
@@ -59,7 +50,7 @@ class Game(models.Model):
     finished = models.BooleanField(default=False)
     turn_number = models.IntegerField(default=1)
     deck = models.ManyToManyField(Card, through='Draft', related_name='deck')
-    deck_index = models.IntegerField(default=0)
+    deck_index = models.IntegerField(default=1)
     players_hand = models.ManyToManyField(Card, through='Hand', related_name='players_hand')
 
     objects = GamesManager()
@@ -67,26 +58,42 @@ class Game(models.Model):
     def drafted_deck(self):
         return self.deck.order_by('draft__draft_order')
 
-    def get_opponent(self):
-        if self.current_player == self.player_1:
+    def get_opponent(self, player):
+        if player == self.player_1:
             return self.player_2
         else:
             return self.player_1
 
     def toggle_next_player(self):
-        self.current_player == self.get_opponent()
+        self.current_player = self.get_opponent(self.current_player)
 
     def prepare_game(self):
+        self.shuffle_deck()
         """each player draw 5 cards from deck"""
         for count in range(0, 10):
             self.draw_from_deck()
             self.toggle_next_player()
+        self.save()
+
+    def shuffle_deck(self):
+        cards = Card.objects.all()
+        order = [i for i in range(Card.objects.count())]
+        shuffle(order)
+        for index, card in enumerate(cards):
+            draft = Draft(
+                game=self,
+                card=card,
+                draft_order=order[index]
+            )
+            draft.save()
 
     def draw_from_deck(self):
         """current player draw a card from deck"""
+        card = self.deck.get(draft__draft_order=self.deck_index)
+        # draft__draft_order = self.deck_index
         hand = Hand(
             game=self,
-            card=self.deck[self.deck_index],
+            card=card,
             player=self.current_player,
         )
         hand.save()
@@ -95,11 +102,14 @@ class Game(models.Model):
     def get_my_hand(self):
         return self.get_player_hand(self.current_player)
 
+    def get_opponent_hand(self):
+        return self.get_player_hand(self.get_opponent(self.current_player))
+
     def get_my_table(self):
         return self.get_player_table(self.current_player)
 
     def get_opponent_table(self):
-        return self.get_player_table(self.get_opponent())
+        return self.get_player_table(self.get_opponent(self.current_player))
 
     def redraw_table(self):
         for hand in self.get_my_table():
@@ -107,10 +117,10 @@ class Game(models.Model):
             hand.save()
 
     def get_player_hand(self, user):
-        return Hand.get_queryset().filter(game=self, player=user, status="H")
+        return self.players_hand.filter(hand__game=self, hand__player=user, hand__status="H")
 
     def get_player_table(self, user):
-        return Hand.get_queryset().filter(Q(game=self, player=user, status="T") | Q(game=self, player=user, status="B"))
+        return self.players_hand.filter(Q(hand__game=self, hand__player=user, hand__status="T") | Q(hand__game=self, hand__player=user, hand__status="B"))
 
     def exchange_deck(self):
         first_player_hand = self.get_player_hand(self.player_1)
@@ -122,13 +132,13 @@ class Game(models.Model):
             hand.player = self.player_1
             hand.save()
 
-    def save(self, *args, **kwargs):
-        if self.turn_number <= 10:
-            self.turn_number += 1
-        else:
-            self.finished = True
-        self.toggle_next_player()
-        super(Game, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.turn_number <= 10:
+    #         self.turn_number += 1
+    #     else:
+    #         self.finished = True
+    #     self.toggle_next_player()
+    #     super(Game, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{0} vs {1}".format(self.player_1, self.player_2)

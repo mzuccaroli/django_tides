@@ -6,11 +6,55 @@
 
 
 {% block content %}
-    <h3>Game: {{ game }}</h3>
-    <div class="col-sm-9">
+    <h3>{{ game }}</h3>
+    <div class="col-sm-4">
+    DECK
         <ul>
             {% for card in game.deck.all %}
-                <li><a href="{{ card.pk }}">{{ card }}</a></li>
+                <li>
+                    <a
+                            {% if forloop.counter < game.deck_index %}
+                                style="text-decoration: line-through"
+                            {% endif %}
+                            href="{{ card.pk }}">{{ card }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-sm-4">
+        My HAND
+        <ul>
+            {% for card in game.get_my_hand %}
+                <li>
+                    <a href="{{ card.pk }}">{{ card }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        My TABLE
+        <ul>
+            {% for card in game.get_my_table %}
+                <li>
+                    <a href="{{ card.pk }}">{{ card }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+     <div class="col-sm-4">
+        Opponent HAND
+        <ul>
+            {% for card in game.get_opponent_hand %}
+                <li>
+                    <a href="{{ card.pk }}">{{ card }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+         Opponent TABLE
+        <ul>
+            {% for card in game.get_opponent_table %}
+                <li>
+                    <a href="{{ card.pk }}">{{ card }}</a>
+                </li>
             {% endfor %}
         </ul>
     </div>
