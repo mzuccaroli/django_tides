@@ -6,28 +6,18 @@ from .serializers import GameSerializer, CardSerializer, DraftSerializer, SeedSe
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
-# class IndexView(generic.ListView):
-#     template_name = 'gamesrv/index.html'
-#     context_object_name = 'games_list'
-#
-#     def get_queryset(self):
-#         # return Game.objects.filter(player_1=request.user).order_by('last_turn_date')[:5]
-#         return Game.objects.all()
-
 
 class AllGamesList(generic.ListView):
     template_name = 'gamesrv/game_list.html'
     model = Game
-    # def get_queryset(self):
-    #     # return Game.objects.filter(player_1=request.user).order_by('last_turn_date')[:5]
-    #     return Game.objects.all()
+
+    def get_queryset(self):
+        return Game.objects.filter(player_1=self.request.user)
 
 
 @login_required
 def game_detail(request, pk):
     game = get_object_or_404(Game, pk=pk)
-    # if game.is_users_move(request.user):
-    #     return redirect('game_do_move', pk=pk)
     return render(request, "gamesrv/game_detail.html", {'game': game})
 
 

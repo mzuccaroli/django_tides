@@ -30,7 +30,7 @@ def accept_invitation(request, pk):
     if request.method == 'POST':
         if "accept" in request.POST:
             game = Game.objects.new_game(invitation)
-            # invitation.delete()
+            invitation.delete()
             return redirect('game_detail', pk=game.pk)
         else:
             invitation.delete()
@@ -42,9 +42,9 @@ def accept_invitation(request, pk):
 class AllInvitationsList(generic.ListView):
     template_name = 'invitations/invitation_list.html'
     model = Invitation
-    # def get_queryset(self):
-    #     # return Game.objects.filter(player_1=request.user).order_by('last_turn_date')[:5]
-    #     return Game.objects.all()
+
+    def get_queryset(self):
+        return Invitation.objects.filter(to_user=self.request.user)
 
 
 class InvitationViewSet(viewsets.ModelViewSet):

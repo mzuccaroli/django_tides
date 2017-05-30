@@ -1,0 +1,7 @@
+<ul>
+    {% for card in cards %}
+        <li>
+            <a href="{{ card.pk }}">{{ card }}</a>
+        </li>
+    {% endfor %}
+</ul>

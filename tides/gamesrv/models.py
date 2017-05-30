@@ -50,7 +50,7 @@ class Game(models.Model):
     finished = models.BooleanField(default=False)
     turn_number = models.IntegerField(default=1)
     deck = models.ManyToManyField(Card, through='Draft', related_name='deck')
-    deck_index = models.IntegerField(default=1)
+    deck_index = models.IntegerField(default=0)
     players_hand = models.ManyToManyField(Card, through='Hand', related_name='players_hand')
 
     objects = GamesManager()
