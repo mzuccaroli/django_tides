@@ -64,6 +64,9 @@ class Game(models.Model):
 
     objects = GamesManager()
 
+    def drafted_deck(self):
+        return self.deck.order_by('draft__draft_order')
+
     def get_opponent(self):
         if self.current_player == self.player_1:
             return self.player_2
@@ -135,6 +138,12 @@ class Draft(models.Model):
     game = models.ForeignKey(Game)
     card = models.ForeignKey(Card)
     draft_order = models.IntegerField()
+
+    class Meta:
+        ordering = ['game', 'draft_order']
+
+    def __str__(self):
+        return "{0} {1}".format(self.game, self.draft_order)
 
 
 CARD_STATUS_CHOICES = (

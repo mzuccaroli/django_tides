@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 
 {% block title %}
-Tides game: {{ game.player_1 }} vs. {{ game.player_2 }}
+    Tides game: {{ game.player_1 }} vs. {{ game.player_2 }}
 {% endblock title %}
 
 
 {% block content %}
     <h3>Game: {{ game }}</h3>
     <div class="col-sm-9">
-        pippo
+        <ul>
+            {% for card in game.deck.all %}
+                <li><a href="{{ card.pk }}">{{ card }}</a></li>
+            {% endfor %}
+        </ul>
     </div>
 {% endblock content %}
