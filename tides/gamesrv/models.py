@@ -98,6 +98,7 @@ class Game(models.Model):
         )
         hand.save()
         self.deck_index += 1
+        Draft.objects.get(card=card, game=self).delete()
 
     def get_my_hand(self):
         return self.get_player_hand(self.current_player)

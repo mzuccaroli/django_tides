@@ -15,19 +15,7 @@
         {% endif %}
     </h3>
     <div class="col-sm-4">
-        DECK
-        <ul>
-            {% for card in game.drafted_deck %}
-                <li>
-                    <a
-                            {% if forloop.counter < game.deck_index %}
-                                style="text-decoration: line-through"
-                            {% endif %}
-                                href="{{ card.pk }}">{{ card }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
+        DECK {% include "gamesrv/card_list_snippet.html" with  cards=game.drafted_deck %}
     </div>
     <div class="col-sm-4">
         current player HAND {% include "gamesrv/card_list_snippet.html" with  cards=game.get_my_hand %}
