@@ -37,7 +37,7 @@ class GamesManager(models.Manager):
             current_player=choice([invitation.to_user, invitation.from_user])
         )
         game.save()
-        game.prepare_game()
+        # game.prepare_game()
         return game
 
 
@@ -90,7 +90,6 @@ class Game(models.Model):
     def draw_from_deck(self):
         """current player draw a card from deck"""
         card = self.deck.get(draft__draft_order=self.deck_index)
-        # draft__draft_order = self.deck_index
         hand = Hand(
             game=self,
             card=card,
@@ -100,46 +99,41 @@ class Game(models.Model):
         self.deck_index += 1
         Draft.objects.get(card=card, game=self).delete()
 
-    def get_my_hand(self):
-        return self.get_player_hand(self.current_player)
-
-    def get_opponent_hand(self):
-        return self.get_player_hand(self.get_opponent(self.current_player))
-
-    def get_my_table(self):
-        return self.get_player_table(self.current_player)
-
-    def get_opponent_table(self):
-        return self.get_player_table(self.get_opponent(self.current_player))
-
     def redraw_table(self):
         for hand in self.get_my_table():
             hand.draw_card()
             hand.save()
 
-    def get_player_hand(self, user):
-        return self.players_hand.filter(hand__game=self, hand__player=user, hand__status="H")
+    def player_1_hand(self):
+        return self.players_hand.filter(hand__game=self, hand__player=self.player_1, hand__status="H")
+
+    def player_2_hand(self):
+        return self.players_hand.filter(hand__game=self, hand__player=self.player_2, hand__status="H")
+
+    def player_1_table(self):
+        return self.players_hand.filter(
+            Q(hand__game=self, hand__player=self.player_1, hand__status="T") |
+            Q(hand__game=self, hand__player=self.player_1, hand__status="B")
+        )
+
+    def player_2_table(self):
+        return self.players_hand.filter(
+            Q(hand__game=self, hand__player=self.player_2, hand__status="T") |
+            Q(hand__game=self, hand__player=self.player_2, hand__status="B")
+        )
 
     def get_player_table(self, user):
-        return self.players_hand.filter(Q(hand__game=self, hand__player=user, hand__status="T") | Q(hand__game=self, hand__player=user, hand__status="B"))
+        return self.players_hand.filter(
+            Q(hand__game=self, hand__player=user, hand__status="T") | Q(hand__game=self, hand__player=user,
+                                                                        hand__status="B"))
 
-    def exchange_deck(self):
-        first_player_hand = self.get_player_hand(self.player_1)
-        second_player_hand = self.get_player_hand(self.player_2)
-        for hand in first_player_hand:
-            hand.player = self.player_2
+    def exchange_hands(self):
+        for hand in Hand.objects.filter(game=self, status="H"):
+            if hand.player == self.player_1:
+                hand.player = self.player_2
+            else:
+                hand.player = self.player_1
             hand.save()
-        for hand in second_player_hand:
-            hand.player = self.player_1
-            hand.save()
-
-    # def save(self, *args, **kwargs):
-    #     if self.turn_number <= 10:
-    #         self.turn_number += 1
-    #     else:
-    #         self.finished = True
-    #     self.toggle_next_player()
-    #     super(Game, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{0} vs {1}".format(self.player_1, self.player_2)

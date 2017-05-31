@@ -1,28 +1,39 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Tides game: {{ game.player_1 }} vs. {{ game.player_2 }}
+    {{ game }}s
 {% endblock title %}
 
 
 {% block content %}
     <h3>
-        {{ game }}
-        {% if request.user == game.current_player %}
-            - your turn
-        {% else %}
-            - opponent turn
-        {% endif %}
+        {{ game }} -- {{ request.user }}
     </h3>
-    <div class="col-sm-4">
-        DECK {% include "gamesrv/card_list_snippet.html" with  cards=game.drafted_deck %}
+    <div class="row">
+        <form action="" method="post">
+            {% csrf_token %}
+            {% if game.deck_index <= 0 %}
+                <button type="submit" name="prepare" value="ok">Prepare game</button>
+            {% else %}
+                <button type="submit" name="switch" value="ok">switch hands</button>
+            {% endif %}
+        </form>
     </div>
-    <div class="col-sm-4">
-        current player HAND {% include "gamesrv/card_list_snippet.html" with  cards=game.get_my_hand %}
-        current player TABLE {% include "gamesrv/card_list_snippet.html" with  cards=game.get_my_table %}
-    </div>
-    <div class="col-sm-4">
-        next player HAND {% include "gamesrv/card_list_snippet.html" with  cards=game.get_opponent_hand %}
-        next player TABLE {% include "gamesrv/card_list_snippet.html" with  cards=get_opponent_table %}
+    <div class="row">
+        <div class="col-sm-4">
+            <h4>Player 1</h4>
+            <h5>hand</h5> {% include "gamesrv/card_list_snippet.html" with  cards=game.player_1_hand %}
+            <h5>table</h5> {% include "gamesrv/card_list_snippet.html" with  cards=game.player_1_table %}
+        </div>
+        <div class="col-sm-4">
+            <h4>Deck</h4>
+            {% include "gamesrv/card_list_snippet.html" with  cards=game.drafted_deck %}
+            <h4>Discard</h4>
+        </div>
+        <div class="col-sm-4">
+            <h4>Player 2</h4>
+            <h5>hand</h5> {% include "gamesrv/card_list_snippet.html" with  cards=game.player_2_hand %}
+            <h5>table</h5> {% include "gamesrv/card_list_snippet.html" with  cards=game.player_2_table %}
+        </div>
     </div>
 {% endblock content %}

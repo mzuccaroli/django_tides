@@ -18,6 +18,12 @@ class AllGamesList(generic.ListView):
 @login_required
 def game_detail(request, pk):
     game = get_object_or_404(Game, pk=pk)
+    if request.method == 'POST':
+        if "prepare" in request.POST:
+            game.prepare_game()
+            return redirect('game_detail', pk=game.pk)
+        elif "switch" in request.POST:
+            game.exchange_hands()
     return render(request, "gamesrv/game_detail.html", {'game': game})
 
 
