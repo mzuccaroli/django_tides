@@ -27,6 +27,12 @@ def game_detail(request, pk):
     return render(request, "gamesrv/game_detail.html", {'game': game})
 
 
+@login_required
+def card_detail(request, pk):
+    card = get_object_or_404(Card, pk=pk)
+    return render(request, "gamesrv/card_detail.html", {'card': card})
+
+
 class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all().order_by('start_date')
     serializer_class = GameSerializer

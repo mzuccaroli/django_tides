@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^$', views.AllGamesList.as_view(), name='allgames'),
     url(r'^(?P<pk>\d+)/$', views.game_detail, name='game_detail'),
+    url(r'^card/(?P<pk>\d+)/$', views.card_detail, name='card_detail')
 ]

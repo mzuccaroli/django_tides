@@ -1,7 +1,7 @@
 <ul>
     {% for card in cards %}
         <li>
-            <a href="{{ card.pk }}">{{ card }}</a>
+            <a class="card_link" href="/gamesrv/card/{{ card.pk }}">{{ card }}</a>
         </li>
     {% endfor %}
 </ul>

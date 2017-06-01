@@ -15,16 +15,19 @@
     <meta name="viewport" content="width=device-width">
 
     {% block styling %}
-        {# Load Twitter Bootstrap http://getbootstrap.com/ #}
-        {# With Amelia theme from http://bootswatch.com/amelia/ #}
         <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     {% endblock styling %}
+
+    {% block javascript %}
+        <script src="{% static 'jquery-2.0.3.min.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    {% endblock javascript %}
 
 </head>
 <body>
 <div class="navbar navbar-default navbar-static-top">
     <div class="container">
-
         <ul class="nav navbar-nav">
             <li><a href="{% url 'allgames' %}">Home</a></li>
             <li><a href="{% url 'tides_invite' %}">New Game</a></li>
@@ -35,7 +38,6 @@
                 <li><a href="{% url 'tides_login' %}">Login</a></li>
             {% endif %}
         </ul>
-
     </div>
 </div>
 
@@ -44,10 +46,5 @@
     {% endblock content %}
 </div>
 
-{% block javascript %}
-    <script src="{% static 'jquery-2.0.3.min.js' %}"></script>
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-{% endblock javascript %}
 </body>
 </html>
