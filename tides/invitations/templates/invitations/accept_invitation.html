@@ -15,8 +15,8 @@ Invitation from {{ invitation.from_user.username }}
         
         <form action="" method="post">
             {% csrf_token %}
-            <button type="submit" name="accept" value="ok">Accept</button>
-            <button type="submit" name="deny" value="no">Deny</button>
+            <button type="submit" name="accept" class="btn btn-primary" value="ok">Accept</button>
+            <button type="submit" name="deny" class="btn btn-default" value="no">Deny</button>
         </form>
     </div>
 {% endblock content %}

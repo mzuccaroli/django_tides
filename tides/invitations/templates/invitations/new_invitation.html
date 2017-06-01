@@ -12,7 +12,7 @@ New Invitation
         <form action="" method="post">
             {% csrf_token %}
             {{ form|crispy }}
-            <button type="submit">Send the invitation</button>
+            <button type="submit"class="btn btn-primary">Send the invitation</button>
         </form>
     </div>
 {% endblock content %}

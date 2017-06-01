@@ -37,26 +37,15 @@
 
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Card</h4>
-          </div>
-          <div class="modal-body">
 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Play card</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
         </div>
-      </div>
     </div>
 
     <script>
       $(document).on('click', '.card_link', function (e) {
-         e.preventDefault();
+        e.preventDefault();
         url = $(this).attr("href");
         $('#myModal').modal('toggle');
 
@@ -64,7 +53,7 @@
           type: "GET",
           url: url,
           success: function (result) {
-            $('.modal-body').html(result);
+            $('.modal-content').html(result);
           },
         });
       });
